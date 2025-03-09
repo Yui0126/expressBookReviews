@@ -64,19 +64,20 @@ regd_users.put("/auth/review/:isbn", (req, res) => {
   //Write your code here
   const isbn = req.params.isbn;
   const review = req.body.review;
-  const username = req.session?.authorization?.username;
+  const username = req.session.username;
+  const contents = {user:username, review:review}
 
   if (!username) {
       return res.status(403).json({ message: "User not logged in" });
   }
-  
+
   let book = books[isbn];
 
   if (!book) {
     return res.status(404).json({ message: "Book not found." });
   }
   if(book) {
-    book.reviews[username] = review;
+    book.reviews[username] = contents;
     res.status(200).json("Review successfully added");
   }
   //res.status(200).json("Review successfully added");
