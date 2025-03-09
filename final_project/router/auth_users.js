@@ -64,7 +64,12 @@ regd_users.put("/auth/review/:isbn", (req, res) => {
   //Write your code here
   const isbn = req.params.isbn;
   const review = req.body.review;
-  const username = req.user?.username;
+  const username = req.session?.authorization?.username;
+
+  if (!username) {
+      return res.status(403).json({ message: "User not logged in" });
+  }
+  
   let book = books[isbn];
 
   if (!book) {
