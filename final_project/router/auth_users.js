@@ -64,7 +64,7 @@ regd_users.put("/auth/review/:isbn", (req, res) => {
   //Write your code here
   const isbn = req.params.isbn;
   const review = req.body.review;
-  const username = req.session.username;
+  const username = req.session.authorization.username;
   const contents = {user:username, review:review}
 
   if (!username) {
@@ -84,8 +84,18 @@ regd_users.put("/auth/review/:isbn", (req, res) => {
 });
 
 
-// Delete a book
+// Delete a book review
+regd_users.delete("/auth/review/:isbn", (req, res) => {
+  const isbn = req.params.isbn;
+  const username = req.session.authorization.username;
+  let book = books[isbn];
 
+  if(isbn) {
+      delete book.reviews[username];
+      res.status(200).json("Review deleted");
+  }
+
+});
 
 module.exports.authenticated = regd_users;
 module.exports.isValid = isValid;
